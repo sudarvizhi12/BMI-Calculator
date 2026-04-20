@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BMI Calculator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      font-size: 22px;
+      color: #1a1a2e;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      color: #333;
+      outline: none;
+      transition: border 0.2s;
+      margin-bottom: 16px;
+    }
+    input:focus { border-color: #4f8ef7; }
+
+    button {
+      width: 100%;
+      padding: 13px;
+      background: #4f8ef7;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+    button:hover { background: #3a7be0; }
+
+    .result {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .result .bmi-val {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .result .bmi-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .result .bmi-tip {
+      font-size: 13px;
+      margin-top: 10px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .underweight { background: #e8f8f5; color: #1abc9c; }
+    .normal      { background: #eaf4ff; color: #4f8ef7; }
+    .overweight  { background: #fff8e1; color: #f39c12; }
+    .obese       { background: #fdecea; color: #e74c3c; }
+
+    .error { color: #e74c3c; font-size: 13px; margin-top: -10px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>⚖️ BMI Calculator</h2>
+
+    <label>Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 70" min="1"/>
+
+    <label>Height (cm)</label>
+    <input type="number" id="height" placeholder="e.g. 170" min="1"/>
+
+    <p class="error" id="error"></p>
+
+    <button onclick="calcBMI()">Calculate BMI</button>
+
+    <div class="result" id="result">
+      <div class="bmi-val" id="bmi-val"></div>
+      <div class="bmi-label" id="bmi-label"></div>
+      <div class="bmi-tip" id="bmi-tip"></div>
+    </div>
+  </div>
+
+  <script>
+    function calcBMI() {
+      const w = parseFloat(document.getElementById('weight').value);
+      const h = parseFloat(document.getElementById('height').value) / 100;
+      const err = document.getElementById('error');
+      const result = document.getElementById('result');
+
+      if (!w || !h || w <= 0 || h <= 0) {
+        err.textContent = 'Please enter valid weight and height.';
+        result.style.display = 'none';
+        return;
+      }
+      err.textContent = '';
+
+      const bmi = (w / (h * h)).toFixed(1);
+      let label, tip, cls;
+
+      if (bmi < 18.5) {
+        label = 'Underweight'; cls = 'underweight';
+        tip = 'Eat more nutrient-rich foods and consider consulting a nutritionist.';
+      } else if (bmi < 25) {
+        label = 'Normal Weight'; cls = 'normal';
+        tip = 'Great! Keep up your balanced diet and regular exercise.';
+      } else if (bmi < 30) {
+        label = 'Overweight'; cls = 'overweight';
+        tip = 'Try reducing calories and adding 30 min of daily activity.';
+      } else {
+        label = 'Obese'; cls = 'obese';
+        tip = 'Consult a healthcare professional for personalised guidance.';
+      }
+
+      document.getElementById('bmi-val').textContent = bmi;
+      document.getElementById('bmi-label').textContent = label;
+      document.getElementById('bmi-tip').textContent = tip;
+
+      result.className = 'result ' + cls;
+      result.style.display = 'block';
+    }
+
+    // Allow Enter key
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') calcBMI(); });
+  </script>
+</body>
+</html>
